@@ -3,632 +3,132 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Salah POS Pro - نظام المطاعم والمحاسبة المتقدم</title>
+<title>Salah POS - نظام نقاط البيع</title>
 <style>
-:root{--bg:#12161f;--card:#1c2331;--panel:#171f2d;--text:#f0f2f5;--muted:#9aa4b2;--line:#2a3447;--primary:#3b82f6;--danger:#ef4444;--ok:#10b981;--warn:#f59e0b;--dark:#0b0f17}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Tahoma,Arial,sans-serif;user-select:none}
-button,input,select,textarea{font:inherit}button{border:0;border-radius:8px;padding:10px 14px;cursor:pointer;font-weight:600}
-.app{display:flex;min-height:100vh}.side{width:220px;background:var(--dark);color:#fff;padding:16px;display:flex;flex-direction:column;justify-content:space-between;border-left:1px solid var(--line)}
-.brand{font-weight:800;font-size:20px;margin-bottom:24px;color:#fff}.brand span{display:block;color:var(--muted);font-size:11px;margin-top:2px}
-.nav{display:flex;flex-direction:column;gap:6px}.nav button{width:100%;background:transparent;color:var(--muted);text-align:right;padding:11px;border-radius:8px;transition:0.2s}
-.nav button:hover,.nav .on{background:var(--primary);color:#fff}
-.main{flex:1;padding:16px;display:flex;flex-direction:column;height:100vh;overflow:hidden}
-.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--line)}
-.top h1{margin:0;font-size:20px}.actions{display:flex;gap:8px}
-
-.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px}
-.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.grid2{display:grid;grid-template-columns:1.2fr .8fr;gap:12px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.field{margin-bottom:8px}.field label{display:block;font-size:11px;color:var(--muted);margin-bottom:4px}input,select,textarea{width:100%;border:1px solid var(--line);border-radius:8px;padding:10px;background:var(--panel);color:#fff;outline:none}input:focus,select:focus{border-color:var(--primary)}
-.primary{background:var(--primary);color:#fff}.secondary{background:#2a3447;color:#fff}.danger{background:var(--danger);color:#fff}.ok{background:var(--ok);color:#fff}.warn{background:var(--warn);color:#000}
-.stat .label{font-size:12px;color:var(--muted)}.stat .num{font-size:24px;font-weight:900;margin-top:5px}
-.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:8px}table{width:100%;border-collapse:collapse}th,td{padding:10px;border-bottom:1px solid var(--line);text-align:right;font-size:12px}th{background:var(--panel);color:var(--muted)}
-.badge{display:inline-block;padding:3px 8px;border-radius:999px;font-size:10px;background:var(--panel);color:var(--primary)}
-.empty{text-align:center;padding:30px;color:var(--muted)}
-.row{display:flex;gap:8px;align-items:end;flex-wrap:wrap}.row>*{flex:1;min-width:120px}
-
-.foodics-pos{display:grid;grid-template-columns:1fr 380px;gap:12px;height:calc(100vh - 80px);overflow:hidden}
-.pos-left{display:flex;flex-direction:column;gap:10px;overflow:hidden}
-.categories-bar{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px}
-.cat-btn{background:var(--panel);color:var(--muted);border:1px solid var(--line);padding:8px 16px;border-radius:8px;white-space:nowrap;font-size:13px}
-.cat-btn.active,.cat-btn:hover{background:var(--primary);color:#fff;border-color:var(--primary)}
-.pos-products{display:grid;grid-template-columns:repeat(auto-fill, minmax(130px, 1fr));gap:10px;overflow-y:auto;padding:2px}
-.foodics-product{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px;text-align:center;cursor:pointer;transition:0.15s;display:flex;flex-direction:column;justify-content:space-between;min-height:110px}
-.foodics-product:hover{border-color:var(--primary);transform:translateY(-2px)}
-.foodics-product b{font-size:12px;display:block;margin-bottom:4px}
-.foodics-product .price{color:var(--ok);font-weight:bold;font-size:12px}
-
-.pos-right{background:var(--card);border:1px solid var(--line);border-radius:12px;display:flex;flex-direction:column;overflow:hidden}
-.cart-header{padding:12px;border-bottom:1px solid var(--line);font-weight:bold;display:flex;justify-content:space-between;align-items:center}
-.cart-items{flex:1;overflow-y:auto;padding:10px}
-.cart-line{display:grid;grid-template-columns:1fr 70px 80px 24px;gap:6px;align-items:center;padding:8px 0;border-bottom:1px dashed var(--line);font-size:12px}
-.cart-line input{padding:4px;text-align:center}
-.cart-footer{padding:12px;border-top:1px solid var(--line);background:var(--panel)}
-.kpi-row{display:flex;justify-content:space-between;margin-bottom:6px;font-size:13px}
-
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1000;display:flex;align-items:center;justify-content:center;padding:15px}
-.modal{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;width:min(900px,100%);max-height:90vh;overflow:auto}
-.toast{position:fixed;left:18px;bottom:18px;background:#10b981;color:#fff;padding:10px 16px;border-radius:8px;opacity:0;pointer-events:none;transition:.2s;z-index:2000;font-weight:bold}
-.toast.show{opacity:1}
-
-.tables-grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(140px, 1fr));gap:12px;overflow-y:auto;padding:4px}
-.table-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;text-align:center;cursor:pointer;transition:0.2s}
-.table-card:hover{border-color:var(--primary)}
-.table-card.busy{border-color:var(--warn);background:rgba(245, 158, 11, 0.05)}
-.kds-grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));gap:14px;overflow-y:auto;padding:4px}
-.kds-card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:8px;border:2px solid var(--warn);animation:pulseBorder 1.5s infinite}
-@keyframes pulseBorder{0%{border-color:var(--warn)} 50%{border-color:transparent} 100%{border-color:var(--warn)}}
+:root{--bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#667085;--line:#e4e7ec;--primary:#1259d6;--danger:#c92a2a;--ok:#087f5b;--warn:#b76e00;--dark:#101828}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Tahoma,Arial,sans-serif}
+button,input,select,textarea{font:inherit}button{border:0;border-radius:10px;padding:9px 13px;cursor:pointer}
+.app{display:flex;min-height:100vh}.side{width:245px;background:#101828;color:#fff;padding:16px;position:sticky;top:0;height:100vh;overflow:auto}.brand{font-weight:800;font-size:21px;margin-bottom:18px}.brand span{display:block;color:#98a2b3;font-size:11px;margin-top:4px}
+.nav button{width:100%;background:transparent;color:#d0d5dd;text-align:right;margin:2px 0}.nav button:hover,.nav .on{background:#1d2939;color:#fff}
+.main{flex:1;padding:18px;min-width:0}.top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:14px}.top h1{margin:0 0 3px;font-size:23px}.actions{display:flex;gap:7px;flex-wrap:wrap}
+.card{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:15px;box-shadow:0 8px 24px rgba(16,24,40,.05)}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.grid2{display:grid;grid-template-columns:1.25fr .75fr;gap:12px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.field{margin-bottom:9px}.field label{display:block;font-size:12px;color:#475467;margin-bottom:5px}input,select,textarea{width:100%;border:1px solid #d0d5dd;border-radius:9px;padding:9px;background:#fff;outline:none}input:focus,select:focus,textarea:focus{border-color:#84a9ff;box-shadow:0 0 0 3px rgba(18,89,214,.1)}
+.primary{background:var(--primary);color:#fff}.secondary{background:#eef2f6;color:#253047}.danger{background:#fee4e2;color:#a4231e}.ok{background:#d1fadf;color:#05603a}.dark{background:var(--dark);color:#fff}
+.stat .label{font-size:12px;color:var(--muted)}.stat .num{font-size:25px;font-weight:900;margin-top:7px}.muted{color:var(--muted);font-size:12px}
+.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:10px}table{width:100%;border-collapse:collapse}th,td{padding:8px 9px;border-bottom:1px solid var(--line);text-align:right;font-size:12px}th{background:#f9fafb}
+.badge{display:inline-block;padding:3px 7px;border-radius:999px;font-size:10px;background:#eef2ff;color:#3448b5}.badge.ok{color:#05603a}.badge.warn{background:#fff3cd;color:#8a5800}.badge.danger{background:#fee4e2;color:#a4231e}
+.empty{text-align:center;padding:30px;color:var(--muted)}.row{display:flex;gap:9px;align-items:end;flex-wrap:wrap}.row>*{flex:1;min-width:130px}
+.pos{display:grid;grid-template-columns:1.2fr .8fr;gap:12px}.products{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-height:62vh;overflow:auto}.product{border:1px solid var(--line);border-radius:12px;padding:11px}.product.low{background:#fffaf0;border-color:#f2b94b}.product b{display:block;margin-bottom:4px}.cart{max-height:50vh;overflow:auto}.line{display:grid;grid-template-columns:1fr 60px 82px 30px;gap:5px;align-items:center;padding:8px 0;border-bottom:1px dashed #ddd}
+.kpi{display:flex;justify-content:space-between;align-items:center;gap:10px}.title{font-weight:800;font-size:16px;margin-bottom:10px}.pill{padding:5px 8px;border:1px solid var(--line);border-radius:999px;background:#fff}.footer{text-align:center;color:#98a2b3;font-size:10px;margin-top:18px}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1000;display:flex;align-items:center;justify-content:center;padding:15px}.modal{background:#fff;border-radius:17px;padding:18px;width:min(950px,100%);max-height:92vh;overflow:auto}
+.toast{position:fixed;left:18px;bottom:18px;background:#111827;color:#fff;padding:11px 14px;border-radius:10px;opacity:0;pointer-events:none;transition:.2s;z-index:2000}.toast.show{opacity:1}
+@media(max-width:1050px){.grid{grid-template-columns:repeat(2,1fr)}.grid2,.pos{grid-template-columns:1fr}.products{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:720px){.app{display:block}.side{height:auto;width:auto;position:relative}.grid,.grid3{grid-template-columns:1fr}.products{grid-template-columns:1fr}.top{display:block}.actions{margin-top:8px}}
+@media print{.side,.top,.no-print{display:none!important}.main{padding:0}.print-card{box-shadow:none;border:0!important}}
 </style>
 </head>
 <body>
 <div id="root"></div><div id="toast" class="toast"></div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
-const DBKEY='salah_pos_pro_v7';
-const defaultData = {
-  setup: false,
-  business: { name: '', activity: 'مطعم ومأكولات', vat: '', cr: '', phone: '', address: '', city: '', branch: 'الفرع الرئيسي', vatRate: 15, cashier: '', invoiceStart: 1001 },
-  settings: { lowStock: 5, currency: 'ر.س' },
-  products: [],
-  sales: [],
-  expenses: [],
-  deliveries: [],
-  tables: [
-    { id: 't1', name: 'طاولة 1', status: 'empty', order: null },
-    { id: 't2', name: 'طاولة 2', status: 'empty', order: null },
-    { id: 't3', name: 'طاولة 3', status: 'empty', order: null },
-    { id: 't4', name: 'VIP 1', status: 'empty', order: null }
-  ],
-  kds: [],
-  lastInvoice: 1000
-};
-
-let db = defaultData;
-function loadDB() {
-  try {
-    const saved = localStorage.getItem(DBKEY);
-    if (saved) db = JSON.parse(saved);
-  } catch (e) { db = defaultData; }
-}
-loadDB();
-
-let audioCtx = null;
-function initAudio() {
-  if (!audioCtx) {
-    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  }
-  if (audioCtx.state === 'suspended') {
-    audioCtx.resume();
-  }
-}
-
-window.addEventListener('storage', (e) => {
-  if (e.key === DBKEY) {
-    loadDB();
-    if (db.kds.length > 0 && page === 'kds') {
-      startAlarmLoop();
-    } else if (db.kds.length === 0) {
-      stopAlarmLoop();
-    }
-    render();
-  }
-});
-
-let page = 'pos', cart = [], currentCat = 'الكل', selectedPay = 'نقدي', orderType = 'محلي', activeTable = null, deliveryApp = 'جاهز';
-let deliveryOrderNo = '', deliveryCaptain = '';
-let alarmTimer = null;
-
-const $ = id => document.getElementById(id);
-const save = () => { localStorage.setItem(DBKEY, JSON.stringify(db)); };
-const uid = () => Date.now().toString(36) + Math.random().toString(36).substr(2);
-const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const money = n => Number(n || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ' + (db.settings?.currency || 'ر.س');
-const toast = t => { let x = $('toast'); if (!x) return; x.textContent = t; x.classList.add('show'); setTimeout(() => x.classList.remove('show'), 2200); };
-const sum = (a, f) => a.reduce((n, x) => n + (Number(f(x)) || 0), 0);
-
-function playLoudBeep() {
-  try {
-    initAudio();
-    if (!audioCtx) return;
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.type = 'sawtooth';
-    osc.frequency.setValueAtTime(950, audioCtx.currentTime);
-    gain.gain.setValueAtTime(0.5, audioCtx.currentTime);
-    osc.connect(gain);
-    gain.connect(audioCtx.destination);
-    osc.start();
-    osc.stop(audioCtx.currentTime + 0.5);
-  } catch(e) {}
-}
-
-function startAlarmLoop() {
-  if (alarmTimer) return;
-  playLoudBeep();
-  alarmTimer = setInterval(() => {
-    if (db.kds.length === 0) {
-      stopAlarmLoop();
-    } else {
-      playLoudBeep();
-    }
-  }, 2500);
-}
-
-function stopAlarmLoop() {
-  if (alarmTimer) {
-    clearInterval(alarmTimer);
-    alarmTimer = null;
-  }
-}
-
-function navBtn(id, t) { return `<button class="${page === id ? 'on' : ''}" onclick="initAudio(); page='${id}'; if(page==='kds' && db.kds.length>0) startAlarmLoop(); render()">${t}</button>`; }
-function side() {
-  let badgeKds = db.kds.length ? ` <span style="background:var(--danger);padding:1px 6px;border-radius:99px;font-size:10px">${db.kds.length}</span>` : '';
-  return `<aside class="side"><div class="brand">Salah POS<span>نظام المطاعم المتطور</span></div><div class="nav">
-  ${navBtn('pos', '⚡ نقطة البيع')}${navBtn('tables', '🍽️ الصالات والطاولات')}${navBtn('kds', '👨‍🍳 شاشة المطبخ (KDS)' + badgeKds)}
-  ${navBtn('accounts', '💰 الحسابات والمالية')}${navBtn('deliveries', '🛵 تسويات التوصيل')}${navBtn('dashboard', '📊 التقارير والأرباح')}
-  ${navBtn('sales', '🧾 الفواتير')}${navBtn('products', '📦 المنتجات')}${navBtn('settings', '⚙️ الإعدادات')}
-  </div><div style="font-size:10px;color:var(--muted);text-align:center">إدارة المهندس صلاح علي</div></aside>`;
-}
-function shell(content, title) {
-  return `<div class="app">${side()}<main class="main"><div class="top"><div><h1>${title}</h1><div style="font-size:11px;color:var(--muted)">${esc(db.business.name)} — ${esc(db.business.branch)}</div></div><div class="actions"><button class="secondary" onclick="resetCart();page='pos';render()">+ سلة جديدة</button><button class="secondary" onclick="page='settings';render()">إعدادات</button></div></div>${content}</main></div>`;
-}
-
-function setup() {
-  return `<div class="overlay"><div class="modal" style="max-width:800px"><h2>إعداد النظام المحاسبي للمطاعم</h2><p style="color:var(--muted);font-size:12px">أدخل بيانات المطعم للبدء.</p>
-  <div class="grid3">
-  ${field('n', 'اسم المطعم *', db.business.name)}${field('a', 'النشاط', db.business.activity)}${field('v', 'الرقم الضريبي VAT *', db.business.vat)}
-  ${field('cr', 'السجل التجاري', db.business.cr)}${field('ph', 'الهاتف', db.business.phone)}${field('ad', 'العنوان', db.business.address)}
-  ${field('ci', 'المدينة', db.business.city)}${field('br', 'الفرع', db.business.branch)}${field('rate', 'VAT %', db.business.vatRate, 'number')}
-  ${field('start', 'رقم أول فاتورة', db.business.invoiceStart, 'number')}${field('cash', 'اسم الكاشير', db.business.cashier)}
-  </div><button class="primary" style="margin-top:14px;width:100%" onclick="finishSetup()">حفظ والانتقال للنظام</button></div></div>`;
-}
-function field(id, label, val, type = 'text') { return `<div class="field"><label>${label}</label><input id="b_${id}" type="${type}" value="${esc(val)}"></div>`; }
-function finishSetup() {
-  const v = id => ($('b_' + id) || {}).value || '';
-  if (!v('n') || !v('v')) return toast('الاسم والرقم الضريبي مطلوبان');
-  db.business = { ...db.business, name: v('n'), activity: v('a'), vat: v('v'), cr: v('cr'), phone: v('ph'), address: v('ad'), city: v('ci'), branch: v('br') || 'الفرع الرئيسي', vatRate: Number(v('rate') || 15), cashier: v('cash'), invoiceStart: Number(v('start') || 1001) };
-  db.lastInvoice = db.business.invoiceStart - 1; db.setup = true; save(); render();
-}
-
-// ----------------- الطاولات -----------------
-function tablesPage() {
-  return shell(`<div class="card" style="flex:1;display:flex;flex-direction:column;overflow:hidden">
-    <div class="row" style="margin-bottom:10px">
-      <button class="primary" onclick="addTablePrompt()">+ إضافة طاولة جديدة</button>
-      <span style="color:var(--muted);font-size:12px;align-self:center">اختر طاولة لفتح أو استعراض طلبها الحالي</span>
-    </div>
-    <div class="tables-grid">
-      ${db.tables.map(t => `<div class="table-card ${t.status === 'busy' ? 'busy' : ''}" onclick="openTable('${t.id}')">
-        <div style="font-size:18px;font-weight:bold;margin-bottom:6px">${esc(t.name)}</div>
-        <div class="badge">${t.status === 'busy' ? 'مشغولة (' + (t.order?.items?.length || 0) + ' أصناف)' : 'فارغة'}</div>
-      </div>`).join('')}
-    </div>
-  </div>`, 'إدارة الصالات والطاولات');
-}
-
-function addTablePrompt() {
-  let name = prompt('أدخل اسم أو رقم الطاولة الجديدة (مثلاً: طاولة 5):');
-  if (!name) return;
-  db.tables.push({ id: uid(), name: name.trim(), status: 'empty', order: null });
-  save(); render(); toast('تمت إضافة الطاولة');
-}
-
-function openTable(id) {
-  let t = db.tables.find(x => x.id === id);
-  if (!t) return;
-  activeTable = t;
-  orderType = 'محلي';
-  cart = (t.status === 'busy' && t.order) ? [...t.order.items] : [];
-  page = 'pos';
-  render();
-}
-
-// ----------------- الكاشير -----------------
-function posPage() {
-  let categories = ['الكل', ...new Set(db.products.map(p => p.category || 'وجبات'))];
-  let filteredProducts = currentCat === 'الكل' ? db.products : db.products.filter(p => (p.category || 'وجبات') === currentCat);
-  let q = window._posQ || '';
-  if (q) filteredProducts = filteredProducts.filter(p => p.name.toLowerCase().includes(q.toLowerCase()) || (p.barcode && p.barcode.includes(q)));
-
-  let tableTitle = activeTable ? `📍 الطاولة الحالية: ${activeTable.name}` : '⚡ طلب عام (بدون طاولة)';
-
-  return shell(`<div class="foodics-pos">
-    <div class="pos-left">
-      <div style="background:var(--card);border:1px solid var(--line);padding:8px 12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center">
-        <b>${tableTitle}</b>
-        <div style="display:flex;gap:4px">
-          <button class="${orderType === 'محلي' ? 'ok' : 'secondary'}" style="padding:4px 10px;font-size:11px" onclick="orderType='محلي';activeTable=null;render()">محلي</button>
-          <button class="${orderType === 'سفري' ? 'ok' : 'secondary'}" style="padding:4px 10px;font-size:11px" onclick="orderType='سفري';activeTable=null;render()">سفري</button>
-          <button class="${orderType === 'توصيل' ? 'ok' : 'secondary'}" style="padding:4px 10px;font-size:11px" onclick="orderType='توصيل';activeTable=null;render()">توصيل تطبيقات</button>
-        </div>
-      </div>
-      ${orderType === 'توصيل' ? `<div style="display:flex;flex-direction:column;gap:6px;background:var(--card);padding:10px;border-radius:8px;border:1px solid var(--line)">
-        <div style="display:flex;gap:6px">
-          <span style="font-size:11px;color:var(--muted);align-self:center">المنصة:</span>
-          <button class="${deliveryApp === 'جاهز' ? 'primary' : 'secondary'}" style="padding:4px 10px;font-size:11px" onclick="deliveryApp='جاهز';render()">جاهز (Jahez)</button>
-          <button class="${deliveryApp === 'هنقرستيشن' ? 'primary' : 'secondary'}" style="padding:4px 10px;font-size:11px" onclick="deliveryApp='هنقرستيشن';render()">هنقرستيشن</button>
-          <button class="${deliveryApp === 'تويو' ? 'primary' : 'secondary'}" style="padding:4px 10px;font-size:11px" onclick="deliveryApp='تويو';render()">تويو (ToYou)</button>
-          <button class="${deliveryApp === 'مرسول' ? 'primary' : 'secondary'}" style="padding:4px 10px;font-size:11px" onclick="deliveryApp='مرسول';render()">مرسول</button>
-        </div>
-        <div style="display:flex;gap:8px">
-          <input id="delOrderNo" placeholder="رقم طلب المنصة (مثال: #8592)" value="${esc(deliveryOrderNo)}" oninput="deliveryOrderNo=this.value" style="font-size:12px;padding:6px">
-          <input id="delCaptain" placeholder="اسم أو رقم المندوب / الكابتن" value="${esc(deliveryCaptain)}" oninput="deliveryCaptain=this.value" style="font-size:12px;padding:6px">
-        </div>
-      </div>` : ''}
-      <div class="row" style="margin-bottom:0">
-        <input id="posSearch" placeholder="بحث سريع عن وجبة أو مشروب..." oninput="window._posQ=this.value;render()" value="${esc(q)}" autofocus>
-      </div>
-      <div class="categories-bar">
-        ${categories.map(c => `<button class="cat-btn ${currentCat === c ? 'active' : ''}" onclick="currentCat='${c}';render()">${c}</button>`).join('')}
-      </div>
-      <div class="pos-products">
-        ${filteredProducts.length ? filteredProducts.map(p => `<div class="foodics-product" onclick="addCart('${p.id}')">
-          ${p.image ? `<img src="${esc(p.image)}" style="width:100%;height:45px;object-fit:cover;border-radius:6px;margin-bottom:4px" onerror="this.style.display='none'">` : ''}
-          <div><b>${esc(p.name)}</b><div style="font-size:10px;color:var(--muted)">مخزون: ${p.stock}</div></div>
-          <div class="price">${money(p.price)}</div>
-        </div>`).join('') : '<div class="empty" style="grid-column:1/-1">لا توجد منتجات مطابقة</div>'}
-      </div>
-    </div>
-    <div class="pos-right">
-      <div class="cart-header"><span>سلة الطلب الحالي</span><button class="danger" style="padding:4px 8px;font-size:11px" onclick="resetCart();render()">إفراغ</button></div>
-      <div class="cart-items">
-        ${cart.length ? cart.map((x, i) => { let p = db.products.find(y => y.id === x.id); if (!p) return ''; return `<div class="cart-line"><div><b>${esc(p.name)}</b><div style="color:var(--muted);font-size:10px">${money(p.price)}</div></div><input type="number" min="1" value="${x.qty}" onchange="setQty('${x.id}',this.value)"><div>${money(p.price * x.qty)}</div><button class="danger" style="padding:2px 6px" onclick="cart.splice(${i},1);render()">×</button></div>`; }).join('') : '<div class="empty">السلة فارغة</div>'}
-      </div>
-      ${cart.length ? cartTotals() : ''}
-    </div>
-  </div>`, 'نقطة البيع (الكاشير والمطاعم)');
-}
-
-function cartTotals() {
-  let net = sum(cart, x => { let p = db.products.find(y => y.id === x.id); return p ? (p.price * x.qty) : 0; });
-  let vat = net * db.business.vatRate / 100, total = net + vat;
-  return `<div class="cart-footer">
-    <div class="kpi-row"><span style="color:var(--muted)">المجموع قبل الضريبة</span><b>${money(net)}</b></div>
-    <div class="kpi-row"><span style="color:var(--muted)">الضريبة (${db.business.vatRate}%)</span><b>${money(vat)}</b></div>
-    <div class="kpi-row" style="font-size:16px;margin-top:6px"><span>الإجمالي المستحق</span><b style="color:var(--ok)">${money(total)}</b></div>
-    <div style="display:flex;gap:4px;margin-top:8px">
-      <button class="${selectedPay === 'نقدي' ? 'ok' : 'secondary'}" style="flex:1;padding:6px;font-size:11px" onclick="selectedPay='نقدي';render()">نقدي</button>
-      <button class="${selectedPay === 'شبكة' ? 'ok' : 'secondary'}" style="flex:1;padding:6px;font-size:11px" onclick="selectedPay='شبكة';render()">شبكة</button>
-      <button class="${selectedPay === 'تطبيق' ? 'ok' : 'secondary'}" style="flex:1;padding:6px;font-size:11px" onclick="selectedPay='تطبيق';render()">تطبيق دفع</button>
-      <button class="${selectedPay === 'آجل' ? 'ok' : 'secondary'}" style="flex:1;padding:6px;font-size:11px" onclick="selectedPay='آجل';render()">آجل / ذمم</button>
-    </div>
-    <div style="margin-top:8px">
-      <button class="primary" style="width:100%;padding:12px;font-size:13px;font-weight:bold" onclick="completeSaleAndKitchen()">✓ إتمام الدفع وإرسال الطلب للمطبخ والطباعة</button>
-    </div>
-  </div>`;
-}
-
-function resetCart() {
-  cart = [];
-  activeTable = null;
-  deliveryOrderNo = '';
-  deliveryCaptain = '';
-}
-
-function addCart(id) {
-  let p = db.products.find(x => x.id === id);
-  if (!p) return;
-  if (p.stock <= 0) return toast('المنتج نفد من المخزون');
-  let x = cart.find(i => i.id === id);
-  if (x) { if (x.qty + 1 > p.stock) return toast('الكمية تتجاوز المخزون'); x.qty++; }
-  else cart.push({ id, qty: 1 });
-  render();
-}
-
-function setQty(id, v) {
-  let x = cart.find(i => i.id === id);
-  let p = db.products.find(y => y.id === id);
-  if (!x || !p) return;
-  x.qty = Math.max(1, Math.min(Number(v) || 1, p.stock));
-  render();
-}
-
-function pushToKitchen() {
-  initAudio();
-  let orderName = activeTable ? activeTable.name : (orderType === 'توصيل' ? `توصيل (${deliveryApp} ${deliveryOrderNo ? '#' + deliveryOrderNo : ''})` : 'طلب سفري');
-  
-  let kdsItem = {
-    id: uid(),
-    orderName: orderName,
-    type: orderType,
-    time: new Date().toLocaleTimeString('ar-SA'),
-    items: [...cart]
-  };
-
-  db.kds.push(kdsItem);
-
-  if (activeTable) {
-    let t = db.tables.find(x => x.id === activeTable.id);
-    if (t) {
-      t.status = 'busy';
-      t.order = { items: [...cart] };
-    }
-  }
-  startAlarmLoop();
-  save();
-}
-
-// ----------------- شاشة المطبخ (KDS) -----------------
-function kdsPage() {
-  return shell(`<div style="flex:1;display:flex;flex-direction:column;overflow:hidden">
-    <div class="row" style="margin-bottom:10px">
-      <span style="color:var(--muted);font-size:12px">شاشة المطبخ تتحدث لحظياً وتصدر تنبيهات صوتية صاخبة ومتكررة عند وصول أي طلب جديد حتى يتم قبوله.</span>
-      <button class="secondary" onclick="db.kds=[];stopAlarmLoop();save();render()">إيقاف الإنذار ومسح الكل</button>
-    </div>
-    <div class="kds-grid">
-      ${db.kds.length ? db.kds.map((o, idx) => `<div class="kds-card" style="border:2px solid var(--warn)">
-        <div style="display:flex;justify-content:space-between;border-bottom:1px solid var(--line);padding-bottom:6px">
-          <b>${esc(o.orderName)}</b>
-          <span style="font-size:11px;color:var(--warn)">${o.time}</span>
-        </div>
-        <div style="flex:1;overflow-y:auto;max-height:180px">
-          ${o.items.map(i => {
-            let p = db.products.find(x => x.id === i.id);
-            return `<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed var(--line);font-size:13px">
-              <span>${esc(p ? p.name : 'منتج')}</span>
-              <b style="color:var(--primary)">× ${i.qty}</b>
-            </div>`;
-          }).join('')}
-        </div>
-        <button class="ok" style="width:100%;padding:8px;font-size:13px" onclick="acceptKdsOrder(${idx})">✓ قبول الطلب وبدء التجهيز</button>
-      </div>`).join('') : '<div class="empty" style="grid-column:1/-1">لا توجد طلبات معلقة في المطبخ حالياً</div>'}
-    </div>
-  </div>`, 'شاشة المطبخ (Kitchen Display System)');
-}
-
-function acceptKdsOrder(idx) {
-  initAudio();
-  db.kds.splice(idx, 1);
-  if (db.kds.length === 0) {
-    stopAlarmLoop();
-  }
-  save();
-  render();
-  toast('تم قبول الطلب وإيقاف الإنذار');
-}
-
-// ----------------- إتمام البيع -----------------
-function completeSaleAndKitchen() {
-  if (!cart.length) return toast('السلة فارغة');
-  initAudio();
-  let net = sum(cart, x => { let p = db.products.find(y => y.id === x.id); return p ? (p.price * x.qty) : 0; });
-  let vat = net * db.business.vatRate / 100, total = net + vat;
-  let orderName = activeTable ? activeTable.name : (orderType === 'توصيل' ? `توصيل (${deliveryApp} ${deliveryOrderNo ? '#' + deliveryOrderNo : ''})` : 'سفري');
-
-  let s = { 
-    id: uid(), 
-    no: String(++db.lastInvoice), 
-    date: new Date().toISOString(), 
-    type: orderType, 
-    customerName: orderName, 
-    deliveryApp: orderType === 'توصيل' ? deliveryApp : '',
-    deliveryOrderNo: deliveryOrderNo,
-    deliveryCaptain: deliveryCaptain,
-    payment: selectedPay, 
-    net, vat, total, 
-    cashier: db.business.cashier, 
-    items: cart.map(x => { let p = db.products.find(y => y.id === x.id); return { id: p.id, name: p.name, qty: x.qty, price: Number(p.price) }; }) 
-  };
-  
-  db.sales.push(s);
-
-  if (orderType === 'توصيل') {
-    db.deliveries.push({
-      id: uid(),
-      date: new Date().toISOString(),
-      app: deliveryApp,
-      orderNo: deliveryOrderNo || s.no,
-      amount: total,
-      status: 'معلق (بانتظار التحويل)',
-      settledDate: ''
-    });
-  }
-
-  cart.forEach(x => { let p = db.products.find(y => y.id === x.id); if (p) p.stock -= x.qty; });
-
-  pushToKitchen();
-
-  if (activeTable) {
-    let t = db.tables.find(x => x.id === activeTable.id);
-    if (t) { t.status = 'empty'; t.order = null; }
-  }
-
-  save(); 
-  resetCart(); 
-  toast('تمت العملية وإرسال الطلب للمطبخ بنجاح: ' + s.no); 
-  printInvoice(s.id); 
-  render();
-}
-
-// ----------------- الحسابات والمالية -----------------
-function accountsPage() {
-  let totalSales = sum(db.sales, x => x.total);
-  let totalExpenses = sum(db.expenses, x => x.amount);
-  let netProfit = totalSales - totalExpenses;
-  let pendingDeliveries = sum(db.deliveries.filter(d => d.status.includes('معلق')), x => x.amount);
-
-  return shell(`<div class="grid">
-    <div class="card stat"><div class="label">إجمالي الإيرادات النقدية</div><div class="num" style="color:var(--ok)">${money(totalSales)}</div></div>
-    <div class="card stat"><div class="label">إجمالي المصروفات التشغيلية</div><div class="num" style="color:var(--danger)">${money(totalExpenses)}</div></div>
-    <div class="card stat"><div class="label">صافي الربح التقديري</div><div class="num" style="color:var(--primary)">${money(netProfit)}</div></div>
-    <div class="card stat"><div class="label">مستحقات معلقة لدى التطبيقات</div><div class="num" style="color:var(--warn)">${money(pendingDeliveries)}</div></div>
-  </div>
-  <div class="card" style="margin-top:12px">
-    <div class="row" style="margin-bottom:10px">
-      <h3>تسجيل مصروف جديد (إيجار، رواتب، مواد خام...)</h3>
-      <button class="primary" onclick="addExpensePrompt()">+ إضافة مصروف</button>
-    </div>
-    ${expensesTable(db.expenses)}
-  </div>`, 'قسم الحسابات والمالية المطور');
-}
-
-function addExpensePrompt() {
-  let title = prompt('بيان المصروف (مثلاً: شراء خضار، فاتورة كهرباء، رواتب):');
-  if (!title) return;
-  let amount = Number(prompt('المبلغ بالريال:') || 0);
-  if (amount <= 0) return toast('مبلغ غير صحيح');
-  
-  db.expenses.push({
-    id: uid(),
-    date: new Date().toISOString(),
-    title: title.trim(),
-    amount: amount
-  });
-  save(); render(); toast('تم تسجيل المصروف بنجاح');
-}
-
-function expensesTable(a) {
-  if (!a.length) return '<div class="empty">لا توجد مصروفات مسجلة</div>';
-  return `<div class="table-wrap"><table><tr><th>التاريخ</th><th>البيان</th><th>المبلغ</th><th>تحكم</th></tr>${a.map((e, idx) => `<tr><td>${new Date(e.date).toLocaleDateString('ar-SA')}</td><td><b>${esc(e.title)}</b></td><td style="color:var(--danger)">${money(e.amount)}</td><td><button class="danger" style="padding:2px 6px;font-size:10px" onclick="db.expenses.splice(${idx},1);save();render()">حذف</button></td></tr>`).join('')}</table></div>`;
-}
-
-// ----------------- تسويات ومبالغ تطبيقات التوصيل -----------------
-function deliveriesPage() {
-  return shell(`<div class="card">
-    <div class="row" style="margin-bottom:10px">
-      <h3>متابعة مستحقات تطبيقات التوصيل (جاهز، هنقرستيشن، تويو، مرسول)</h3>
-      <span style="font-size:12px;color:var(--muted)">تتبع متى يقوم التطبيق بتحويل مستحقات المطعم المالية.</span>
-    </div>
-    ${deliveriesTable(db.deliveries)}
-  </div>`, 'تسويات ومبالغ تطبيقات التوصيل');
-}
-
-function deliveriesTable(a) {
-  if (!a.length) return '<div class="empty">لا توجد طلبات توصيل مسجلة عبر التطبيقات بعد</div>';
-  return `<div class="table-wrap"><table><tr><th>التاريخ</th><th>التطبيق</th><th>رقم الطلب</th><th>المبلغ</th><th>الحالة</th><th>إجراء</th></tr>${a.map((d, idx) => `<tr>
-    <td>${new Date(d.date).toLocaleDateString('ar-SA')}</td>
-    <td><b>${esc(d.app)}</b></td>
-    <td>${esc(d.orderNo)}</td>
-    <td style="color:var(--ok)">${money(d.amount)}</td>
-    <td><span class="badge" style="background:${d.status.includes('تم') ? 'rgba(16,185,129,0.2)' : 'rgba(245,158,11,0.2)'};color:${d.status.includes('تم') ? 'var(--ok)' : 'var(--warn)'}">${esc(d.status)}</span></td>
-    <td>${d.status.includes('معلق') ? `<button class="ok" style="padding:4px 8px;font-size:11px" onclick="settleDelivery(${idx})">تحديد كـ "تم التحويل للمطعم"</button>` : '<span style="font-size:11px;color:var(--muted)">تمت التسوية</span>'}</td>
-  </tr>`).join('')}</table></div>`;
-}
-
-function settleDelivery(idx) {
-  db.deliveries[idx].status = 'تم التحويل للمطعم';
-  db.deliveries[idx].settledDate = new Date().toISOString();
-  save(); render();
-  toast('تم تحديث حالة استلام المبلغ من التطبيق');
-}
-
-// ----------------- التقارير والأرباح -----------------
-function dashboard() {
-  let sales = sum(db.sales, x => x.total);
-  let expenses = sum(db.expenses, x => x.amount);
-  let low = db.products.filter(p => p.stock <= db.settings.lowStock).length;
-  return shell(`<div class="grid">
-    <div class="card stat"><div class="label">إجمالي المبيعات</div><div class="num" style="color:var(--ok)">${money(sales)}</div></div>
-    <div class="card stat"><div class="label">إجمالي المصروفات</div><div class="num" style="color:var(--danger)">${money(expenses)}</div></div>
-    <div class="card stat"><div class="label">صافي الربح</div><div class="num" style="color:var(--primary)">${money(sales - expenses)}</div></div>
-    <div class="card stat"><div class="label">تنبيهات المخزون</div><div class="num" style="color:var(--danger)">${low}</div></div>
-  </div><div class="card" style="margin-top:12px"><h3>آخر الفواتير المسجلة</h3>${salesTable(db.sales.slice().reverse().slice(0, 10))}</div>`, 'لوحة التقارير والأرباح');
-}
-
-function salesTable(a) {
-  if (!a.length) return '<div class="empty">لا توجد فواتير</div>';
-  return `<div class="table-wrap"><table><tr><th>الرقم</th><th>التاريخ</th><th>النوع / الوجهة</th><th>الدفع</th><th>الإجمالي</th><th>إجراء</th></tr>${a.map(s => `<tr><td>${esc(s.no)}</td><td>${new Date(s.date).toLocaleString('ar-SA')}</td><td>${esc(s.customerName)}</td><td>${esc(s.payment)}</td><td>${money(s.total)}</td><td><button class="secondary" style="padding:4px 8px;font-size:11px" onclick="printInvoice('${s.id}')">طباعة</button></td></tr>`).join('')}</table></div>`;
-}
-
-function productsPage() {
-  return shell(`<div class="card"><div class="row"><button class="primary" onclick="productModal()">+ إضافة منتج جديد</button><input placeholder="بحث..." oninput="filterProds(this.value)"></div><div id="pList" style="margin-top:10px">${prodsTable(db.products)}</div></div>`, 'إدارة المنتجات');
-}
-
-function prodsTable(a) {
-  if (!a.length) return '<div class="empty">لا توجد منتجات مضافة بعد</div>';
-  return `<div class="table-wrap"><table><tr><th>الصورة</th><th>الاسم</th><th>التصنيف</th><th>السعر</th><th>التكلفة</th><th>المخزون</th><th>تحكم</th></tr>${a.map(p => `<tr>
-    <td>${p.image ? `<img src="${esc(p.image)}" style="width:32px;height:32px;object-fit:cover;border-radius:4px" onerror="this.style.display='none'">` : '<span style="color:var(--muted);font-size:10px">بدون</span>'}</td>
-    <td><b>${esc(p.name)}</b></td>
-    <td><span class="badge">${esc(p.category || 'وجبات')}</span></td>
-    <td>${money(p.price)}</td>
-    <td>${money(p.cost)}</td>
-    <td>${p.stock}</td>
-    <td><button class="secondary" style="padding:4px 8px;font-size:11px" onclick="productModal('${p.id}')">تعديل</button></td>
-  </tr>`).join('')}</table></div>`;
-}
-
-function filterProds(q) {
-  let arr = db.products.filter(p => p.name.toLowerCase().includes(q.toLowerCase()) || (p.category || '').toLowerCase().includes(q.toLowerCase()));
-  let el = $('pList'); if (el) el.innerHTML = prodsTable(arr);
-}
-
-function productModal(id) {
-  let p = db.products.find(x => x.id === id) || { name: '', category: 'وجبات', barcode: '', price: 0, cost: 0, stock: 100, image: '' };
-  let m = document.createElement('div');
-  m.id = 'modal'; m.className = 'overlay';
-  m.innerHTML = `<div class="modal"><h2>${id ? 'تعديل منتج' : 'منتج جديد'}</h2><div class="grid3">
-    ${mfield('pn', 'اسم الوجبة / المنتج', p.name)}
-    ${mfield('pcateg', 'التصنيف', p.category)}
-    ${mfield('pb', 'الباركود', p.barcode)}
-    ${mfield('pp', 'سعر البيع', p.price, 'number')}
-    ${mfield('pco', 'التكلفة', p.cost, 'number')}
-    ${mfield('ps', 'المخزون', p.stock, 'number')}
-  </div>
-  <div style="margin-top:8px">
-    ${mfield('pimg', 'رابط صورة المنتج (رابط مباشر من الإنترنت URL)', p.image)}
-  </div>
-  <button class="primary" style="margin-top:12px" onclick="saveProduct('${id || ''}')">حفظ المنتج</button> 
-  <button class="secondary" onclick="closeModal()">إلغاء</button></div>`;
-  document.body.appendChild(m);
-}
-function mfield(id, l, v, t = 'text') { return `<div class="field"><label>${l}</label><input id="${id}" type="${t}" value="${esc(v)}"></div>`; }
-function saveProduct(id) {
-  let name = $('pn').value.trim();
-  if (!name) return toast('اسم المنتج مطلوب');
-  let p = id ? db.products.find(x => x.id === id) : { id: uid() };
-  p.name = name;
-  p.category = $('pcateg').value.trim() || 'وجبات';
-  p.barcode = $('pb').value.trim();
-  p.price = Number($('pp').value || 0);
-  p.cost = Number($('pco').value || 0);
-  p.stock = Number($('ps').value || 0);
-  p.image = $('pimg').value.trim();
-  if (!id) db.products.push(p);
-  save(); closeModal(); render(); toast('تم الحفظ');
-}
-
-function salesPage() {
-  return shell(`<div class="card"><div class="row"><input placeholder="بحث برقم الفاتورة..." oninput="filterSales(this.value)"></div><div id="salesList" style="margin-top:10px">${salesTable(db.sales.slice().reverse())}</div></div>`, 'فواتير المبيعات');
-}
-function filterSales(q) {
-  let arr = db.sales.filter(s => s.no.includes(q) || s.customerName.includes(q));
-  let el = $('salesList'); if (el) el.innerHTML = salesTable(arr.slice().reverse());
-}
-
-function settingsPage() {
-  return shell(`<div class="card"><div class="title" style="font-weight:bold;margin-bottom:10px">الإعدادات العامة</div><div class="grid2">${['name', 'activity', 'vat', 'cr', 'phone', 'address', 'city', 'branch'].map(k => mfield('s_' + k, k, db.business[k] || '')).join('')}</div><button class="primary" style="margin-top:10px" onclick="saveSettings()">حفظ التعديلات</button></div>`, 'الإعدادات');
-}
-function saveSettings() {
-  ['name', 'activity', 'vat', 'cr', 'phone', 'address', 'city', 'branch'].forEach(k => { let el = $('s_' + k); if (el) db.business[k] = el.value.trim(); });
-  save(); render(); toast('تم حفظ الإعدادات');
-}
-
-function closeModal() { let m = $('modal'); if (m) m.remove(); }
-function invoiceHtml(s) {
-  return `<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>فاتورة ${s.no}</title><style>body{font-family:Tahoma;padding:20px;color:#111}.wrap{max-width:400px;margin:auto;text-align:center}.head{border-bottom:1px dashed #333;padding-bottom:10px;margin-bottom:10px}table{width:100%;border-collapse:collapse;font-size:12px}th,td{padding:4px;text-align:right;border-bottom:1px solid #ddd}</style></head><body><div class="wrap"><div class="head"><h3>${esc(db.business.name)}</h3><div>رقم الفاتورة: ${s.no}</div><div>النوع: ${esc(s.customerName)}</div><div>التاريخ: ${new Date(s.date).toLocaleString('ar-SA')}</div></div><table><tr><th>الصنف</th><th>كمية</th><th>السعر</th></tr>${s.items.map(i => `<tr><td>${esc(i.name)}</td><td>${i.qty}</td><td>${money(i.price * i.qty)}</td></tr>`).join('')}</table><div style="margin-top:10px;text-align:left;font-size:13px"><b>الإجمالي: ${money(s.total)}</b></div></div><script>setTimeout(()=>window.print(),300)<\/script></body></html>`;
-}
-function printInvoice(id) {
-  let s = db.sales.find(x => x.id === id); if (!s) return;
-  let w = window.open('', '_blank'); w.document.write(invoiceHtml(s)); w.document.close();
-}
-
-function render() {
-  let root = $('root'); if (!root) return;
-  if (!db.setup) { root.innerHTML = setup(); return; }
-  let html = '';
-  if (page === 'pos') html = posPage();
-  else if (page === 'tables') html = tablesPage();
-  else if (page === 'kds') html = kdsPage();
-  else if (page === 'accounts') html = accountsPage();
-  else if (page === 'deliveries') html = deliveriesPage();
-  else if (page === 'dashboard') html = dashboard();
-  else if (page === 'sales') html = salesPage();
-  else if (page === 'products') html = productsPage();
-  else if (page === 'settings') html = settingsPage();
-  root.innerHTML = html;
-}
-
+const DBKEY='salah_pos_v7';
+const COA=[
+['1100','الصندوق'],['1200','البنك'],['1300','العملاء'],['1400','المخزون'],
+['2100','الموردون'],['2200','ضريبة القيمة المضافة - مخرجات'],['2300','ضريبة القيمة المضافة - مدخلات'],
+['3100','رأس المال'],['4000','المبيعات'],['4100','مرتجعات المبيعات'],['5000','تكلفة المبيعات'],['5100','مرتجعات المشتريات'],['6000','المصروفات']
+];
+const blank=()=>({setup:false,business:{name:'',activity:'',vat:'',cr:'',phone:'',address:'',city:'',branch:'الفرع الرئيسي',vatRate:15,cashier:'',payment:'نقدي',invoiceStart:1001},settings:{lowStock:5,currency:'ر.س',invoiceFooter:'شكرًا لتعاملكم معنا'},products:[],customers:[],suppliers:[],sales:[],purchases:[],returns:[],expenses:[],journal:[],lastInvoice:1000});
+let db=(()=>{try{return JSON.parse(localStorage.getItem(DBKEY))||blank()}catch{return blank()}})(), page='dashboard', cart=[], invoiceType='B2C', purchaseLines=[], manualLines=[];
+const $=id=>document.getElementById(id), save=()=>localStorage.setItem(DBKEY,JSON.stringify(db));
+const uid=()=>crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random();
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money=n=>Number(n||0).toLocaleString('ar-SA',{minimumFractionDigits:2,maximumFractionDigits:2})+' '+db.settings.currency;
+const toast=t=>{let x=$('toast');x.textContent=t;x.classList.add('show');setTimeout(()=>x.classList.remove('show'),2200)};
+const sum=(a,f)=>a.reduce((n,x)=>n+(Number(f(x))||0),0);
+function journal(desc,lines,ref=''){db.journal.push({id:uid(),date:new Date().toISOString(),desc,ref,lines})}
+function navBtn(id,t){return `<button class="${page===id?'on':''}" onclick="page='${id}';render()">${t}</button>`}
+function side(){return `<aside class="side"><div class="brand">Salah POS<span>نظام نقاط البيع والمبيعات</span></div><div class="nav">
+${navBtn('dashboard','لوحة التحكم')}${navBtn('pos','الكاشير والمبيعات')}${navBtn('sales','فواتير المبيعات')}
+${navBtn('purchases','المشتريات')}${navBtn('products','المنتجات والمخزون')}${navBtn('customers','العملاء')}
+${navBtn('suppliers','الموردون')}${navBtn('returns','المرتجعات')}${navBtn('expenses','المصروفات')}
+${navBtn('journal','القيود اليومية')}${navBtn('reports','التقارير')}${navBtn('settings','الإعدادات والنسخ الاحتياطي')}
+</div><div class="footer">تصميم المهندس صلاح علي</div></aside>`}
+function shell(content,title){return `<div class="app">${side()}<main class="main"><div class="top"><div><h1>${title}</h1><div class="muted">${esc(db.business.name)} — ${esc(db.business.branch)}</div></div><div class="actions"><button class="secondary" onclick="newInvoice()">+ فاتورة جديدة</button><button class="secondary" onclick="page='settings';render()">نسخة احتياطية</button></div></div>${content}</main></div>`}
+function setup(){return `<div class="overlay"><div class="modal" style="max-width:900px"><h2>إعداد النشاط التجاري</h2><p class="muted">هذه البيانات ستظهر على فواتيرك. لا يوجد اسم متجر تجريبي مفروض عليك.</p>
+<div class="grid3">
+${field('n','الاسم القانوني للمنشأة *',db.business.name)}${field('a','النشاط',db.business.activity)}${field('v','الرقم الضريبي VAT *',db.business.vat)}
+${field('cr','السجل التجاري',db.business.cr)}${field('ph','الهاتف',db.business.phone)}${field('ad','العنوان',db.business.address)}
+${field('ci','المدينة',db.business.city)}${field('br','الفرع',db.business.branch)}${field('rate','VAT %',db.business.vatRate,'number')}
+${field('start','أول رقم فاتورة',db.business.invoiceStart,'number')}${field('cash','اسم الكاشير',db.business.cashier)}<div class="field"><label>طريقة الدفع الافتراضية</label><select id="bpay"><option>نقدي</option><option>شبكة/مدى</option><option>بطاقة</option><option>تحويل بنكي</option><option>آجل</option></select></div>
+</div><div class="card" style="background:#f8fafc"><b>ملاحظة:</b> هذه نسخة تعمل محليًا على المتصفح ومصممة للمرحلة الأولى. لا تعد اعتمادًا رسميًا من ZATCA ولا تنفذ تكامل المرحلة الثانية.</div><button class="primary" style="margin-top:12px" onclick="finishSetup()">حفظ وبدء البرنامج</button></div></div>`}
+function field(id,label,val,type='text'){return `<div class="field"><label>${label}</label><input id="b_${id}" type="${type}" value="${esc(val)}"></div>`}
+function finishSetup(){const v=id=>$('b_'+id).value.trim();if(!v('n')||!v('v'))return toast('الاسم القانوني والرقم الضريبي مطلوبان');db.business={...db.business,name:v('n'),activity:v('a'),vat:v('v'),cr:v('cr'),phone:v('ph'),address:v('ad'),city:v('ci'),branch:v('br')||'الفرع الرئيسي',vatRate:Number(v('rate')||15),cashier:v('cash'),payment:$('bpay').value,invoiceStart:Number(v('start')||1001)};db.lastInvoice=db.business.invoiceStart-1;db.setup=true;save();render()}
+function dashboard(){let sales=sum(db.sales,x=>x.total),pur=sum(db.purchases,x=>x.total),ret=sum(db.returns,x=>x.total),low=db.products.filter(p=>p.stock<=db.settings.lowStock).length;return shell(`<div class="grid">
+<div class="card stat"><div class="label">المبيعات</div><div class="num">${money(sales)}</div><div class="muted">${db.sales.length} فاتورة</div></div>
+<div class="card stat"><div class="label">المشتريات</div><div class="num">${money(pur)}</div></div>
+<div class="card stat"><div class="label">المرتجعات</div><div class="num">${money(ret)}</div></div>
+<div class="card stat"><div class="label">نقص المخزون</div><div class="num">${low}</div></div></div>
+<div class="grid2" style="margin-top:12px"><div class="card"><div class="title">آخر الفواتير</div>${salesTable(db.sales.slice().reverse().slice(0,10))}</div><div class="card"><div class="title">تنبيهات المخزون</div>${stockTable(db.products.filter(p=>p.stock<=db.settings.lowStock))}</div></div>`,'لوحة التحكم')}
+function salesTable(a){if(!a.length)return '<div class="empty">لا توجد فواتير</div>';return `<div class="table-wrap"><table><tr><th>الرقم</th><th>التاريخ</th><th>النوع</th><th>العميل</th><th>الإجمالي</th><th></th></tr>${a.map(s=>`<tr><td>${esc(s.no)}</td><td>${new Date(s.date).toLocaleString('ar-SA')}</td><td><span class="badge ${s.type==='B2C'?'warn':'ok'}">${s.type}</span></td><td>${esc(s.customerName||'عميل نقدي')}</td><td>${money(s.total)}</td><td><button class="secondary" onclick="printInvoice('${s.id}')">طباعة</button></td></tr>`).join('')}</table></div>`}
+function stockTable(a){if(!a.length)return '<div class="empty">لا توجد تنبيهات</div>';return `<div class="table-wrap"><table><tr><th>المنتج</th><th>المخزون</th><th>الحد</th></tr>${a.map(p=>`<tr><td>${esc(p.name)}</td><td><span class="badge danger">${p.stock}</span></td><td>${db.settings.lowStock}</td></tr>`).join('')}</table></div>`}
+function pos(){return shell(`<div class="pos"><div class="card"><div class="row"><div class="field"><label>بحث أو باركود</label><input id="q" oninput="filterPOS()" placeholder="ابحث عن منتج"></div><div class="field" style="max-width:180px"><label>نوع الفاتورة</label><select id="type" onchange="invoiceType=this.value;toggleBuyer()"><option value="B2C">B2C مبسطة</option><option value="B2B">B2B ضريبية</option></select></div></div>
+<div id="buyer" class="card" style="display:none;margin-bottom:10px"><div class="grid3"><div class="field"><label>اسم المشتري</label><input id="buyerName"></div><div class="field"><label>VAT المشتري *</label><input id="buyerVat"></div><div class="field"><label>العنوان</label><input id="buyerAddress"></div></div></div>
+<div id="pgrid" class="products">${productCards(db.products)}</div></div><div class="card"><div class="title">السلة</div><div class="cart">${cartHTML()}</div>${cart.length?cartTotals():'<div class="empty">السلة فارغة</div>'}</div></div>`,'الكاشير والمبيعات')}
+function productCards(a){a=a.filter(p=>p.active!==false);if(!a.length)return '<div class="empty">لا توجد منتجات</div>';return a.map(p=>`<div class="product ${p.stock<=db.settings.lowStock?'low':''}"><b>${esc(p.name)}</b><div class="muted">${esc(p.barcode||'بدون باركود')}</div><div>${money(p.price)}</div><div class="muted">مخزون: ${p.stock}</div><button class="primary" style="margin-top:7px" onclick="addCart('${p.id}')">إضافة</button></div>`).join('')}
+function filterPOS(){let q=($('q').value||'').toLowerCase();$('pgrid').innerHTML=productCards(db.products.filter(p=>(p.name||'').toLowerCase().includes(q)||(p.barcode||'').toLowerCase().includes(q)))}
+function addCart(id){let p=db.products.find(x=>x.id===id);if(!p||p.stock<=0)return toast('المنتج غير متوفر');let x=cart.find(i=>i.id===id);if(x){if(x.qty+1>p.stock)return toast('الكمية تتجاوز المخزون');x.qty++}else cart.push({id,qty:1});render()}
+function setQty(id,v){let x=cart.find(i=>i.id===id);if(!x)return;x.qty=Math.max(1,Math.min(Number(v)||1,db.products.find(p=>p.id===id).stock));render()}
+function delCart(id){cart=cart.filter(x=>x.id!==id);render()}
+function cartHTML(){return cart.map(x=>{let p=db.products.find(y=>y.id===x.id);return `<div class="line"><div><b>${esc(p.name)}</b><div class="muted">${money(p.price)}</div></div><input type="number" min="1" value="${x.qty}" onchange="setQty('${x.id}',this.value)"><div>${money(p.price*x.qty)}</div><button class="danger" onclick="delCart('${x.id}')">×</button></div>`}).join('')}
+function cartTotals(){let net=sum(cart,x=>db.products.find(p=>p.id===x.id).price*x.qty),vat=net*db.business.vatRate/100,total=net+vat;return `<div style="margin-top:10px"><div class="kpi"><span>قبل الضريبة</span><b>${money(net)}</b></div><div class="kpi"><span>VAT ${db.business.vatRate}%</span><b>${money(vat)}</b></div><div class="kpi" style="font-size:17px;margin:6px 0"><span>الإجمالي</span><b>${money(total)}</b></div><div class="row"><select id="pay"><option>نقدي</option><option>شبكة/مدى</option><option>بطاقة</option><option>تحويل بنكي</option><option>آجل</option></select><button class="primary" onclick="completeSale()">إصدار الفاتورة</button></div></div>`}
+function toggleBuyer(){if($('buyer'))$('buyer').style.display=$('type').value==='B2B'?'block':'none'}
+function completeSale(){if(!cart.length)return toast('السلة فارغة');let type=$('type').value,bvat=$('buyerVat')?.value.trim()||'';if(type==='B2B'&&!bvat)return toast('VAT المشتري مطلوب في B2B');let net=sum(cart,x=>db.products.find(p=>p.id===x.id).price*x.qty),vat=net*db.business.vatRate/100,total=net+vat;let s={id:uid(),no:String(++db.lastInvoice),date:new Date().toISOString(),type,customerName:$('buyerName')?.value||'عميل نقدي',buyerVat:bvat,buyerAddress:$('buyerAddress')?.value||'',payment:$('pay').value,net,vat,total,cashier:db.business.cashier,items:cart.map(x=>{let p=db.products.find(y=>y.id===x.id);return{id:p.id,name:p.name,barcode:p.barcode,qty:x.qty,price:Number(p.price)}})};db.sales.push(s);cart.forEach(x=>db.products.find(p=>p.id===x.id).stock-=x.qty);journal('بيع '+s.no,[['1100',total,'مدين'],['4000',net,'دائن'],['2200',vat,'دائن']],s.no);save();cart=[];toast('تم إصدار الفاتورة '+s.no);printInvoice(s.id)}
+function newInvoice(){page='pos';cart=[];invoiceType='B2C';render()}
+function products(){return shell(`<div class="card"><div class="row"><button class="primary" onclick="productModal()">+ منتج</button><input id="pq" placeholder="بحث" oninput="filterProducts()"></div><div id="pt" style="margin-top:10px">${productsTable(db.products)}</div></div>`,'المنتجات والمخزون')}
+function productsTable(a){if(!a.length)return '<div class="empty">لا توجد منتجات</div>';return `<div class="table-wrap"><table><tr><th>المنتج</th><th>الباركود</th><th>السعر</th><th>التكلفة</th><th>المخزون</th><th></th></tr>${a.map(p=>`<tr><td>${esc(p.name)}</td><td>${esc(p.barcode||'')}</td><td>${money(p.price)}</td><td>${money(p.cost)}</td><td>${p.stock}</td><td><button class="secondary" onclick="productModal('${p.id}')">تعديل</button></td></tr>`).join('')}</table></div>`}
+function filterProducts(){let q=$('pq').value.toLowerCase();$('pt').innerHTML=productsTable(db.products.filter(p=>JSON.stringify(p).toLowerCase().includes(q)))}
+function productModal(id){let p=db.products.find(x=>x.id===id)||{name:'',barcode:'',price:0,cost:0,stock:0,unit:'قطعة'};modal(`<h2>${id?'تعديل منتج':'منتج جديد'}</h2><div class="grid2">${mfield('pn','اسم المنتج',p.name)}${mfield('pb','الباركود',p.barcode)}${mfield('pp','سعر البيع',p.price,'number')}${mfield('pc','التكلفة',p.cost,'number')}${mfield('ps','المخزون',p.stock,'number')}${mfield('pu','الوحدة',p.unit)}</div><button class="primary" onclick="saveProduct('${id||''}')">حفظ</button> <button class="secondary" onclick="closeModal()">إلغاء</button>`)}
+function mfield(id,l,v,type='text'){return `<div class="field"><label>${l}</label><input id="${id}" type="${type}" value="${esc(v)}"></div>`}
+function saveProduct(id){let v=x=>$(x).value.trim();if(!v('pn'))return toast('اسم المنتج مطلوب');let p=id?db.products.find(x=>x.id===id):{id:uid(),active:true};Object.assign(p,{name:v('pn'),barcode:v('pb'),price:Number(v('pp')||0),cost:Number(v('pc')||0),stock:Number(v('ps')||0),unit:v('pu')||'قطعة'});if(!id)db.products.push(p);save();closeModal();render();toast('تم حفظ المنتج')}
+function parties(type){let arr=type==='customer'?db.customers:db.suppliers,title=type==='customer'?'العملاء':'الموردون';return shell(`<div class="card"><div class="row"><button class="primary" onclick="partyModal('${type}')">+ ${type==='customer'?'عميل':'مورد'}</button><input id="partyq" placeholder="بحث" oninput="filterParty('${type}')"></div><div id="partyt" style="margin-top:10px">${partyTable(arr,type)}</div></div>`,title)}
+function partyTable(a,type){if(!a.length)return '<div class="empty">لا توجد بيانات</div>';return `<div class="table-wrap"><table><tr><th>الاسم</th><th>VAT</th><th>الهاتف</th><th>المدينة</th><th></th></tr>${a.map(x=>`<tr><td>${esc(x.name)}</td><td>${esc(x.vat||'')}</td><td>${esc(x.phone||'')}</td><td>${esc(x.city||'')}</td><td><button class="secondary" onclick="partyModal('${type}','${x.id}')">تعديل</button></td></tr>`).join('')}</table></div>`}
+function filterParty(type){let q=$('partyq').value.toLowerCase(),a=(type==='customer'?db.customers:db.suppliers).filter(x=>JSON.stringify(x).toLowerCase().includes(q));$('partyt').innerHTML=partyTable(a,type)}
+function partyModal(type,id){let arr=type==='customer'?db.customers:db.suppliers,x=arr.find(y=>y.id===id)||{name:'',vat:'',phone:'',city:'',address:''};modal(`<h2>${type==='customer'?'عميل':'مورد'}</h2><div class="grid2">${mfield('pn','الاسم',x.name)}${mfield('pv','الرقم الضريبي',x.vat)}${mfield('pph','الهاتف',x.phone)}${mfield('pci','المدينة',x.city)}${mfield('pad','العنوان',x.address)}</div><button class="primary" onclick="saveParty('${type}','${id||''}')">حفظ</button> <button class="secondary" onclick="closeModal()">إلغاء</button>`)}
+function saveParty(type,id){let arr=type==='customer'?db.customers:db.suppliers;if(!$('pn').value.trim())return toast('الاسم مطلوب');let x=id?arr.find(y=>y.id===id):{id:uid()};Object.assign(x,{name:$('pn').value.trim(),vat:$('pv').value.trim(),phone:$('pph').value.trim(),city:$('pci').value.trim(),address:$('pad').value.trim()});if(!id)arr.push(x);save();closeModal();render()}
+function sales(){return shell(`<div class="card"><div class="row"><input id="sq" placeholder="بحث برقم الفاتورة أو العميل" oninput="filterSales()"></div><div id="st" style="margin-top:10px">${salesTable(db.sales.slice().reverse())}</div></div>`,'فواتير المبيعات')}
+function filterSales(){let q=$('sq').value.toLowerCase();$('st').innerHTML=salesTable(db.sales.slice().reverse().filter(s=>(s.no+' '+s.customerName).toLowerCase().includes(q)))}
+function purchases(){return shell(`<div class="card"><button class="primary" onclick="purchaseModal()">+ تسجيل شراء</button><div style="margin-top:10px">${purchaseTable()}</div></div>`,'المشتريات')}
+function purchaseTable(){if(!db.purchases.length)return '<div class="empty">لا توجد مشتريات</div>';return `<div class="table-wrap"><table><tr><th>الرقم</th><th>التاريخ</th><th>المورد</th><th>قبل الضريبة</th><th>VAT</th><th>الإجمالي</th></tr>${db.purchases.slice().reverse().map(x=>`<tr><td>${esc(x.no)}</td><td>${new Date(x.date).toLocaleDateString('ar-SA')}</td><td>${esc(x.supplierName)}</td><td>${money(x.net)}</td><td>${money(x.vat)}</td><td>${money(x.total)}</td></tr>`).join('')}</table></div>`}
+function purchaseModal(){purchaseLines=[];addPurchaseLine();modal(`<h2>تسجيل شراء</h2><div class="grid3">${mselect('psup','المورد',db.suppliers)}${mfield('pno','رقم فاتورة المورد',Date.now().toString().slice(-7))}<div class="field"><label>السداد</label><select id="ppay"><option>نقدي</option><option>آجل</option><option>تحويل بنكي</option></select></div></div><div id="pl"></div><button class="secondary" onclick="addPurchaseLine()">+ إضافة صنف</button> <button class="primary" onclick="savePurchase()">حفظ</button> <button class="secondary" onclick="closeModal()">إلغاء</button>`);renderPurchaseLines()}
+function mselect(id,l,a){return `<div class="field"><label>${l}</label><select id="${id}">${a.map(x=>`<option value="${x.id}">${esc(x.name)}</option>`).join('')}</select></div>`}
+function addPurchaseLine(){purchaseLines.push({product:'',qty:1,cost:0});setTimeout(renderPurchaseLines)}
+function renderPurchaseLines(){if(!$('pl'))return;$('pl').innerHTML=purchaseLines.map((l,i)=>`<div class="row card" style="margin:7px 0"><select onchange="purchaseLines[${i}].product=this.value"><option value="">اختر المنتج</option>${db.products.map(p=>`<option value="${p.id}" ${l.product===p.id?'selected':''}>${esc(p.name)}</option>`).join('')}</select><input type="number" min="1" value="${l.qty}" oninput="purchaseLines[${i}].qty=Number(this.value)"><input type="number" min="0" step=".01" value="${l.cost}" oninput="purchaseLines[${i}].cost=Number(this.value)"></div>`).join('')}
+function savePurchase(){let sup=db.suppliers.find(x=>x.id===$('psup').value),lines=purchaseLines.filter(x=>x.product&&x.qty>0);if(!sup||!lines.length)return toast('اختر المورد وأدخل الأصناف');let net=0;lines.forEach(l=>{let p=db.products.find(x=>x.id===l.product);p.stock+=Number(l.qty);p.cost=Number(l.cost);net+=l.qty*l.cost});let vat=net*db.business.vatRate/100,total=net+vat,no=$('pno').value.trim();db.purchases.push({id:uid(),no,date:new Date().toISOString(),supplierName:sup.name,net,vat,total,pay:$('ppay').value,items:lines});journal('شراء '+no,[['1400',net,'مدين'],['2300',vat,'مدين'],['2100',total,'دائن']],no);save();closeModal();render();toast('تم حفظ الشراء')}
+function returns(){return shell(`<div class="card"><button class="primary" onclick="returnModal()">+ مرتجع مبيعات / إشعار دائن</button><div style="margin-top:10px">${db.returns.length?`<div class="table-wrap"><table><tr><th>المرجع</th><th>التاريخ</th><th>الفاتورة</th><th>الإجمالي</th></tr>${db.returns.slice().reverse().map(r=>`<tr><td>${r.no}</td><td>${new Date(r.date).toLocaleString('ar-SA')}</td><td>${r.saleNo}</td><td>${money(r.total)}</td></tr>`).join('')}</table></div>`:'<div class="empty">لا توجد مرتجعات</div>'}</div></div>`,'المرتجعات')}
+function returnModal(){modal(`<h2>مرتجع مبيعات</h2><div class="field"><label>الفاتورة</label><select id="rs" onchange="renderReturnLines()"><option value="">اختر فاتورة</option>${db.sales.map(s=>`<option value="${s.id}">${s.no} — ${money(s.total)}</option>`).join('')}</select></div><div id="rl"></div><button class="primary" onclick="saveReturn()">حفظ المرتجع</button> <button class="secondary" onclick="closeModal()">إلغاء</button>`)}
+function renderReturnLines(){let s=db.sales.find(x=>x.id===$('rs').value);if(!$('rl'))return;$('rl').innerHTML=s?s.items.map((i,n)=>`<div class="row card" style="margin:7px 0"><div><b>${esc(i.name)}</b></div><input id="rq${n}" type="number" min="0" max="${i.qty}" value="0"></div>`).join(''):''}
+function saveReturn(){let s=db.sales.find(x=>x.id===$('rs').value);if(!s)return toast('اختر الفاتورة');let net=0,items=[];s.items.forEach((i,n)=>{let q=Math.min(i.qty,Number($('rq'+n)?.value||0));if(q>0){items.push({...i,qty:q});net+=q*i.price;let p=db.products.find(x=>x.id===i.id);if(p)p.stock+=q}});if(!items.length)return toast('حدد الكميات');let vat=net*db.business.vatRate/100,total=net+vat,no='CM-'+Date.now().toString().slice(-8);db.returns.push({id:uid(),no,date:new Date().toISOString(),saleNo:s.no,net,vat,total,items});journal('مرتجع '+no,[['4100',net,'مدين'],['2200',vat,'مدين'],['1100',total,'دائن']],no);save();closeModal();render();toast('تم حفظ المرتجع')}
+function expenses(){return shell(`<div class="card"><button class="primary" onclick="expenseModal()">+ مصروف</button><div style="margin-top:10px">${db.expenses.length?`<div class="table-wrap"><table><tr><th>التاريخ</th><th>البيان</th><th>الحساب</th><th>الإجمالي</th></tr>${db.expenses.slice().reverse().map(x=>`<tr><td>${new Date(x.date).toLocaleDateString('ar-SA')}</td><td>${esc(x.desc)}</td><td>${esc(x.account)}</td><td>${money(x.total)}</td></tr>`).join('')}</table></div>`:'<div class="empty">لا توجد مصروفات</div>'}</div></div>`,'المصروفات')}
+function expenseModal(){modal(`<h2>مصروف</h2><div class="grid2">${mfield('ed','البيان','')}${mfield('ea','الحساب','مصروف عام')}${mfield('en','المبلغ قبل الضريبة',0,'number')}<div class="field"><label>يشمل VAT</label><select id="ev"><option value="1">نعم</option><option value="0">لا</option></select></div></div><button class="primary" onclick="saveExpense()">حفظ</button> <button class="secondary" onclick="closeModal()">إلغاء</button>`)}
+function saveExpense(){let desc=$('ed').value.trim(),net=Number($('en').value||0),vat=$('ev').value==='1'?net*db.business.vatRate/100:0;if(!desc||net<=0)return toast('أدخل البيانات');let x={id:uid(),date:new Date().toISOString(),desc,account:$('ea').value,net,vat,total:net+vat};db.expenses.push(x);journal('مصروف '+desc,[['6000',net,'مدين'],['2300',vat,'مدين'],['1100',net+vat,'دائن']]);save();closeModal();render();toast('تم حفظ المصروف')}
+function journalPage(){return shell(`<div class="card"><button class="primary" onclick="journalModal()">+ قيد يدوي</button><div style="margin-top:10px">${db.journal.length?`<div class="table-wrap"><table><tr><th>التاريخ</th><th>البيان</th><th>المرجع</th><th>الحركة</th></tr>${db.journal.slice().reverse().map(j=>`<tr><td>${new Date(j.date).toLocaleString('ar-SA')}</td><td>${esc(j.desc)}</td><td>${esc(j.ref)}</td><td>${j.lines.map(l=>`${l[0]} | ${money(l[1])} | ${l[2]}`).join('<br>')}</td></tr>`).join('')}</table></div>`:'<div class="empty">لا توجد قيود</div>'}</div></div>`,'القيود اليومية — مدين / دائن')}
+function journalModal(){manualLines=[{acc:'1100',d:0,c:0},{acc:'4000',d:0,c:0}];modal(`<h2>قيد يومي يدوي</h2>${mfield('jd','البيان','')}<div id="jl"></div><button class="secondary" onclick="manualLines.push({acc:'1100',d:0,c:0});renderManual()">+ سطر</button> <button class="primary" onclick="saveManual()">حفظ</button> <button class="secondary" onclick="closeModal()">إلغاء</button>`);renderManual()}
+function renderManual(){if(!$('jl'))return;$('jl').innerHTML=manualLines.map((l,i)=>`<div class="row card" style="margin:7px 0"><select onchange="manualLines[${i}].acc=this.value">${COA.map(a=>`<option value="${a[0]}" ${a[0]===l.acc?'selected':''}>${a[0]} — ${esc(a[1])}</option>`).join('')}</select><input type="number" step=".01" placeholder="مدين" value="${l.d}" oninput="manualLines[${i}].d=Number(this.value)"><input type="number" step=".01" placeholder="دائن" value="${l.c}" oninput="manualLines[${i}].c=Number(this.value)"></div>`).join('')}
+function saveManual(){let d=$('jd').value.trim(),dr=sum(manualLines,x=>x.d),cr=sum(manualLines,x=>x.c);if(!d||dr<=0||Math.abs(dr-cr)>.01)return toast('القيد غير متوازن');journal(d,manualLines.flatMap(x=>[[x.acc,x.d,'مدين'],[x.acc,x.c,'دائن']]).filter(x=>x[1]>0),'MANUAL');save();closeModal();render();toast('تم حفظ القيد')}
+function reports(){let sales=sum(db.sales,x=>x.total),ret=sum(db.returns,x=>x.total),pur=sum(db.purchases,x=>x.total),exp=sum(db.expenses,x=>x.total),out=sum(db.sales,x=>x.vat)-sum(db.returns,x=>x.vat),inp=sum(db.purchases,x=>x.vat)+sum(db.expenses,x=>x.vat),stock=sum(db.products,x=>x.stock*x.cost);return shell(`<div class="grid"><div class="card stat"><div class="label">صافي المبيعات</div><div class="num">${money(sales-ret)}</div></div><div class="card stat"><div class="label">المشتريات</div><div class="num">${money(pur)}</div></div><div class="card stat"><div class="label">المصروفات</div><div class="num">${money(exp)}</div></div><div class="card stat"><div class="label">قيمة المخزون</div><div class="num">${money(stock)}</div></div></div><div class="grid2" style="margin-top:12px"><div class="card"><div class="title">ملخص VAT</div><table><tr><td>مخرجات VAT</td><td>${money(out)}</td></tr><tr><td>مدخلات VAT</td><td>${money(inp)}</td></tr><tr><td><b>صافي تقديري</b></td><td><b>${money(out-inp)}</b></td></tr></table></div><div class="card"><div class="title">مؤشرات</div><p>عدد المنتجات: <b>${db.products.length}</b></p><p>العملاء: <b>${db.customers.length}</b></p><p>الموردون: <b>${db.suppliers.length}</b></p></div></div>`,'التقارير')}
+function settings(){return shell(`<div class="grid2"><div class="card"><div class="title">إعدادات النشاط</div><div class="grid2">${['name','activity','vat','cr','phone','address','city','branch'].map(k=>mfield('s_'+k,k,db.business[k]||'' )).join('')}${mfield('s_rate','VAT %',db.business.vatRate,'number')}${mfield('s_low','حد تنبيه المخزون',db.settings.lowStock,'number')}</div><button class="primary" onclick="saveSettings()">حفظ</button></div><div class="card"><div class="title">النسخ الاحتياطي</div><button class="primary" onclick="backup()">تنزيل JSON</button> <button class="secondary" onclick="$('restore').click()">استيراد JSON</button><input id="restore" type="file" accept=".json" style="display:none" onchange="restore(event)"><hr><button class="danger" onclick="resetAll()">حذف بيانات هذا الجهاز</button></div></div>`,'الإعدادات والنسخ الاحتياطي')}
+function saveSettings(){['name','activity','vat','cr','phone','address','city','branch'].forEach(k=>db.business[k]=$('s_'+k).value.trim());db.business.vatRate=Number($('s_rate').value||15);db.settings.lowStock=Number($('s_low').value||5);save();render();toast('تم الحفظ')}
+function backup(){let b=new Blob([JSON.stringify(db,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='Salah_POS_Backup_'+new Date().toISOString().slice(0,10)+'.json';a.click()}
+function restore(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);if(!x.business||!Array.isArray(x.products))throw Error();db=x;save();render();toast('تم الاسترجاع')}catch{toast('الملف غير صالح')}};r.readAsText(f)}
+function resetAll(){if(!confirm('سيتم حذف بيانات النظام من هذا الجهاز. هل أنت متأكد؟'))return;localStorage.removeItem(DBKEY);db=blank();cart=[];render()}
+function modal(body){document.body.insertAdjacentHTML('beforeend',`<div id="modal" class="overlay"><div class="modal">${body}</div></div>`)}
+function closeModal(){$('modal')?.remove()}
+function qrTLV(s){const vals=[db.business.name,db.business.vat,s.date,s.total.toFixed(2),s.vat.toFixed(2)],out=[];const e=new TextEncoder();vals.forEach((v,i)=>{let b=e.encode(String(v));out.push(i+1,b.length,...b)});let str=String.fromCharCode(...out);return btoa(str)}
+function invoiceHtml(s){let qr=s.type==='B2C'?qrTLV(s):'';return `<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>${esc(s.no)}</title><style>body{font-family:Arial,Tahoma,sans-serif;color:#111;padding:24px}.wrap{max-width:850px;margin:auto}.head{display:flex;justify-content:space-between;gap:20px}.muted{color:#666;font-size:12px}table{width:100%;border-collapse:collapse;margin-top:18px}th,td{padding:9px;border-bottom:1px solid #ddd;text-align:right}.tot{max-width:360px;margin-right:auto;margin-top:15px}.qr{width:180px;height:180px}.foot{text-align:center;color:#666;margin-top:22px;font-size:11px}@media print{button{display:none}}</style></head><body><div class="wrap"><div class="head"><div><h2>${esc(db.business.name)}</h2><div>${esc(db.business.activity)}</div><div class="muted">${esc(db.business.address)} — ${esc(db.business.city)}</div><div class="muted">VAT: ${esc(db.business.vat)} | CR: ${esc(db.business.cr)} | ${esc(db.business.phone)}</div></div><div><h3>${s.type==='B2C'?'فاتورة ضريبية مبسطة':'فاتورة ضريبية'}</h3><div>رقم الفاتورة: ${esc(s.no)}</div><div>${new Date(s.date).toLocaleString('ar-SA')}</div>${s.type==='B2B'?`<div>المشتري: ${esc(s.customerName)}</div><div>VAT المشتري: ${esc(s.buyerVat)}</div>`:`<div id="qr" class="qr"></div>`}</div></div><table><tr><th>الصنف</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th></tr>${s.items.map(i=>`<tr><td>${esc(i.name)}</td><td>${i.qty}</td><td>${Number(i.price).toFixed(2)}</td><td>${(i.qty*i.price).toFixed(2)}</td></tr>`).join('')}</table><div class="tot"><div>قبل الضريبة: <b>${money(s.net)}</b></div><div>VAT: <b>${money(s.vat)}</b></div><div>الإجمالي: <b>${money(s.total)}</b></div><div>الدفع: <b>${esc(s.payment)}</b></div></div><div class="foot">${esc(db.settings.invoiceFooter)}<br>تصميم المهندس صلاح علي</div></div>${s.type==='B2C'?`<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"><\/script><script>new QRCode(document.getElementById('qr'),{text:${JSON.stringify(qr)},width:180,height:180});<\/script>`:''}</body></html>`}
+function printInvoice(id){let s=db.sales.find(x=>x.id===id);if(!s)return;let w=window.open('','_blank','width=950,height=900');if(!w)return toast('اسمح بالنوافذ المنبثقة للطباعة');w.document.write(invoiceHtml(s));w.document.close();setTimeout(()=>w.print(),700)}
+function render(){if(!db.setup){$('root').innerHTML=setup();return}let c=page==='dashboard'?dashboard():page==='pos'?pos():page==='sales'?sales():page==='purchases'?purchases():page==='products'?products():page==='customers'?parties('customer'):page==='suppliers'?parties('supplier'):page==='returns'?returns():page==='expenses'?expenses():page==='journal'?journalPage():page==='reports'?reports():settings();$('root').innerHTML=c;if(page==='pos')toggleBuyer()}
 render();
 </script>
-</body>
-</html>
+</body></html>
